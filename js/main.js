@@ -112,27 +112,3 @@ if (pagination) {
     loadCards();
   });
 }
-
-function loadCards() {
-  while (cardsContainer.firstChild) {
-    cardsContainer.removeChild(cardsContainer.firstChild);
-  }
-  
-  if (window.location.pathname !== '/favorites.html') {
-    getPokemon().then(pokemon => {
-      addCards(pokemon);
-      updatePageNumber();
-    });
-  };
-}
-
-function updatePageNumber() {
-  if (window.location.pathname !== '/favorites.html') {
-    const pageNumber = document.querySelector('.current-page');
-    if (pageNumber) {
-      pageNumber.textContent = currentPage;
-    }
-  }
-}
-
-loadCards();

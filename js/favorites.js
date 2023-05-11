@@ -1,8 +1,21 @@
 const favoritesData = JSON.parse(localStorage.getItem('favorites'));
+const noFavsElement = document.getElementById('no-favs');
 
 while (cardsContainer.firstChild) {
   cardsContainer.removeChild(cardsContainer.firstChild);
 }
+
+function updateNoFavsElementVisibility() {
+  const favoritesData = JSON.parse(localStorage.getItem('favorites'));
+  
+  if (favoritesData.length === 0) {
+    noFavsElement.style.visibility = 'visible';
+  } else {
+    noFavsElement.style.visibility = 'hidden';
+  }
+}
+
+updateNoFavsElementVisibility();
 
 Promise.all(favoritesData.map(pokemonId => {
   return fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`)
@@ -37,6 +50,7 @@ function addUnfavoriteButtonToTooltip(cardTop, pokemonData) {
     if (index > -1) {
       favoritesData.splice(index, 1);
       localStorage.setItem('favorites', JSON.stringify(favoritesData));
+      updateNoFavsElementVisibility();
     }
   });
 
