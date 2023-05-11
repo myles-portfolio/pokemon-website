@@ -2,26 +2,33 @@ var favoriteData = [];
 
 const updateFavorites = (pokemonId) => {
   favoriteData = JSON.parse(localStorage.getItem('favorites')) || [];
+
   if (!favoriteData.includes(pokemonId)) {
     favoriteData.push(pokemonId);
     localStorage.setItem('favorites', JSON.stringify(favoriteData));
   }
 }
 
+const loadCards = (pokemonDataArray) => {
+  cardsContainer.innerHTML = '';
+  pokemonDataArray.forEach(pokemonData => {
+    if (!favoriteData.includes(pokemonData.id)) {
+      const card = createPokemonCard(pokemonData);
+      addFavoriteButtonToTooltip(card.querySelector('.card-top'), pokemonData);
+      cardsContainer.appendChild (card);
+    }
+  });
+}
+
 fetch('https://pokeapi.co/api/v2/pokemon?limit=30')
   .then(response => response.json())
   .then(data => {
     const promises = data.results.map(pokemon => fetch(pokemon.url).then(response => response.json()));
-    
     return Promise.all(promises);
   })
   .then(pokemonDataArray => {
-    cardsContainer.innerHTML = '';
-    pokemonDataArray.forEach(pokemonData => {
-      const card = createPokemonCard(pokemonData);
-      addFavoriteButtonToTooltip(card.querySelector('.card-top'), pokemonData);
-      cardsContainer.appendChild(card);
-    });
+    favoriteData = JSON.parse(localStorage.getItem('favorites')) || [];
+    loadCards(pokemonDataArray);
   })
   .catch(error => console.log(error));
 
@@ -36,6 +43,7 @@ function addFavoriteButtonToTooltip(cardTop, pokemonData) {
 
   favoriteButton.addEventListener('click', () => {
     updateFavorites(pokemonData.id);
+    cardTop.parentNode.parentNode.removeChild(cardTop.parentNode);
   });
 
   const tooltip = document.createElement('div');
