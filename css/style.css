@@ -208,6 +208,15 @@
   color: var(--clr-text);
 }
 
+.card-bottom .type.dragon {
+  background: var(--dragon);
+}
+
+.card-bottom .type.ice {
+  background: var(--ice);
+  color: var(--clr-text);
+}
+
 .tooltip {
   position: absolute;
   top: 0;
