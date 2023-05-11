@@ -1,4 +1,5 @@
-.favorite-btn {
+.favorite-btn,
+.filters-container button {
   background-color: var(--cerulean-blue);
   border: none;
   outline: none;  
@@ -8,9 +9,10 @@
   text-transform: uppercase;
   font-size: 0.75rem;
   font-weight: 700;
-  margin-top: 1rem;
   cursor: pointer;
 }
+
+.favorite-btn { margin-top: 1rem; }
 
 #no-favs {
   display: flex;
@@ -31,4 +33,30 @@
 
 #no-favs p a:hover {
   color: var(--gold-foil);
+}
+
+.filters-container {
+  display: flex;
+  margin: 2rem 0;
+  gap: 20px;
+}
+
+.filters-container button {
+  border: 1px solid var(--cerulean-blue);
+}
+
+.filters-container button:hover {
+  background-color: var(--white);
+  border: 1px solid var(--cerulean-blue);
+  color: var(--cerulean-blue);
+}
+
+.total-stats h3 {
+  color: var(--clr-text);
+}
+
+.stat {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
 }

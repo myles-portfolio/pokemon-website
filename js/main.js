@@ -1,6 +1,6 @@
 const cardsContainer = document.querySelector('.grid-container');
 
-function getPokemon() {
+const getPokemon = () => {
   const limit = 30;
   const offset = (currentPage - 1) * limit;
   return fetch(`https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`)
@@ -8,7 +8,7 @@ function getPokemon() {
     .then(data => data.results);
 }
 
-function createPokemonCard(pokemonData) {
+const createPokemonCard = pokemonData => {
   let cardDetails = `Height: ${pokemonData.height}\nWeight: ${pokemonData.weight}\nBase Experience: ${pokemonData.base_experience}\nHP: ${pokemonData.stats[0].base_stat}\nAttack: ${pokemonData.stats[1].base_stat}\nDefense: ${pokemonData.stats[2].base_stat}`;
   
   const card = document.createElement('div');
@@ -61,6 +61,7 @@ function createPokemonCard(pokemonData) {
   const id = document.createElement('p');
   id.className = 'id';
   id.textContent = `#${pokemonData.id}`;
+  card.setAttribute('data-id', pokemonData.id);
   cardBottom.appendChild(id);
 
   const type = document.createElement('div');
@@ -72,7 +73,7 @@ function createPokemonCard(pokemonData) {
   return card;
 }
 
-function addCards(pokemon) {
+const addCards = pokemon => {
   // Create an array of promises for each API call
   const pokemonPromises = pokemon.map(p => {
     return fetch(p.url)
@@ -111,4 +112,70 @@ if (pagination) {
     currentPage++;
     loadCards();
   });
+}
+
+// *** FILTER BUTTONS
+
+const ascButton = document.getElementById('asc');
+const descButton = document.getElementById('desc');
+const resetButton = document.getElementById('reset');
+
+ascButton.addEventListener('click', () => {
+  sortCardsByName('asc');
+});
+
+descButton.addEventListener('click', () => {
+  sortCardsByName('desc');
+});
+
+resetButton.addEventListener('click', () => {
+  const cards = Array.from(cardsContainer.children);
+  cards.sort((a, b) => {
+    const aId = parseInt(a.getAttribute('data-id'));
+    const bId = parseInt(b.getAttribute('data-id'));
+    return aId - bId;
+  });
+  cardsContainer.innerHTML = '';
+  cards.forEach(card => cardsContainer.appendChild(card));
+});
+
+const sortCardsByName = sortOrder => {
+  const cards = Array.from(cardsContainer.children);
+  cards.sort((card1, card2) => {
+    const name1 = card1.querySelector('.name').textContent;
+    const name2 = card2.querySelector('.name').textContent;
+    if (sortOrder === 'asc') {
+      return name1.localeCompare(name2);
+    } else {
+      return name2.localeCompare(name1);
+    }
+  });
+  cardsContainer.innerHTML = '';
+  cards.forEach(card => cardsContainer.appendChild(card));
+}
+
+// *** TOTAL STATS
+
+const calculateTotalStats = pokemonDataArray => {
+  const hpElement = document.getElementById('hp');
+  const atkElement = document.getElementById('atk');
+  const defElement = document.getElementById('def');
+
+  let totalHp = 0;
+  let totalAtk = 0;
+  let totalDef = 0;
+
+  pokemonDataArray.forEach(pokemonData => {
+    const hp = pokemonData.stats.find(stat => stat.stat.name === 'hp').base_stat;
+    const atk = pokemonData.stats.find(stat => stat.stat.name === 'attack').base_stat;
+    const def = pokemonData.stats.find(stat => stat.stat.name === 'defense').base_stat;
+
+    totalHp += hp;
+    totalAtk += atk;
+    totalDef += def;
+  });
+
+  hpElement.textContent = totalHp;
+  atkElement.textContent = totalAtk;
+  defElement.textContent = totalDef;
 }

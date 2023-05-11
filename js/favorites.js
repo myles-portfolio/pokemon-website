@@ -17,32 +17,41 @@ function updateNoFavsElementVisibility() {
 
 updateNoFavsElementVisibility();
 
+let pokemonDataArray = [];
+
 Promise.all(favoritesData.map(pokemonId => {
   return fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`)
     .then(response => response.json())
-})).then(pokemonDataArr => {
-  // Clear the cards container
+})).then(pokemonData => {
+  pokemonDataArray = pokemonData;
   cardsContainer.innerHTML = '';
 
-  // Create a card for each Pokemon and add it to the container
-  pokemonDataArr.forEach(pokemonData => {
+  pokemonData.forEach(pokemonData => {
     const card = createPokemonCard(pokemonData);
     addUnfavoriteButtonToTooltip(card.querySelector('.card-top'), pokemonData);
     cardsContainer.appendChild(card);
   });
+
+  calculateTotalStats(pokemonDataArray);
 }).catch(error => console.log(error));
 
 function addUnfavoriteButtonToTooltip(cardTop, pokemonData) {
   const tooltipText = document.createElement('div');
   tooltipText.className = 'tooltip-text';
-  tooltipText.textContent = `Height: ${pokemonData.height}\nWeight: ${pokemonData.weight}\nBase Experience: ${pokemonData.base_experience}\nHP: ${pokemonData.stats[0].base_stat}\nAttack: ${pokemonData.stats[1].base_stat}\nDefense: ${pokemonData.stats[2].base_stat}`;
+  tooltipText.textContent = `
+    Height: ${pokemonData.height}
+    Weight: ${pokemonData.weight}
+    Base Experience: ${pokemonData.base_experience}
+    HP: ${pokemonData.stats[0].base_stat}
+    Attack: ${pokemonData.stats[1].base_stat}
+    Defense: ${pokemonData.stats[2].base_stat}
+    `;
 
   const unfavoriteButton = document.createElement('button');
   unfavoriteButton.textContent = 'Unfavorite';
   unfavoriteButton.className = 'favorite-btn';
 
   unfavoriteButton.addEventListener('click', () => {
-    // Remove the card from the page
     cardTop.parentNode.parentNode.removeChild(cardTop.parentNode);
 
     const favoritesData = JSON.parse(localStorage.getItem('favorites'));
@@ -51,6 +60,23 @@ function addUnfavoriteButtonToTooltip(cardTop, pokemonData) {
       favoritesData.splice(index, 1);
       localStorage.setItem('favorites', JSON.stringify(favoritesData));
       updateNoFavsElementVisibility();
+      
+      // fetch updated data for the remaining favorites and push it to pokemonDataArray
+      Promise.all(favoritesData.map(pokemonId => {
+        return fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`)
+          .then(response => response.json())
+      })).then(updatedPokemonData => {
+        pokemonDataArray = updatedPokemonData;
+        cardsContainer.innerHTML = '';
+
+        updatedPokemonData.forEach(updatedPokemonData => {
+          const card = createPokemonCard(updatedPokemonData);
+          addUnfavoriteButtonToTooltip(card.querySelector('.card-top'), updatedPokemonData);
+          cardsContainer.appendChild(card);
+        });
+
+        calculateTotalStats(pokemonDataArray);
+      }).catch(error => console.log(error));
     }
   });
 

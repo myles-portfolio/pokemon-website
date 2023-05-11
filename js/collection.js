@@ -14,10 +14,16 @@ const loadCards = (pokemonDataArray) => {
   pokemonDataArray.forEach(pokemonData => {
     if (!favoriteData.includes(pokemonData.id)) {
       const card = createPokemonCard(pokemonData);
-      addFavoriteButtonToTooltip(card.querySelector('.card-top'), pokemonData);
-      cardsContainer.appendChild (card);
+      addFavoriteButtonToTooltip(card.querySelector('.card-top'), pokemonData, pokemonDataArray);
+      cardsContainer.appendChild(card);
     }
   });
+}
+
+const retrieveRemainingCards = (pokemonDataArray) => {
+  favoriteData = JSON.parse(localStorage.getItem('favorites')) || [];
+  const remainingCards = pokemonDataArray.filter(pokemonData => !favoriteData.includes(pokemonData.id));
+  return remainingCards;
 }
 
 fetch('https://pokeapi.co/api/v2/pokemon?limit=30')
@@ -29,13 +35,22 @@ fetch('https://pokeapi.co/api/v2/pokemon?limit=30')
   .then(pokemonDataArray => {
     favoriteData = JSON.parse(localStorage.getItem('favorites')) || [];
     loadCards(pokemonDataArray);
+    const remainingCards = retrieveRemainingCards(pokemonDataArray);
+    calculateTotalStats(remainingCards);
   })
   .catch(error => console.log(error));
 
-function addFavoriteButtonToTooltip(cardTop, pokemonData) {
+const addFavoriteButtonToTooltip = (cardTop, pokemonData, pokemonDataArray) => {
   const tooltipText = document.createElement('div');
   tooltipText.className = 'tooltip-text';
-  tooltipText.textContent = `Height: ${pokemonData.height}\nWeight: ${pokemonData.weight}\nBase Experience: ${pokemonData.base_experience}\nHP: ${pokemonData.stats[0].base_stat}\nAttack: ${pokemonData.stats[1].base_stat}\nDefense: ${pokemonData.stats[2].base_stat}`;
+  tooltipText.textContent = `
+    Height: ${pokemonData.height}
+    Weight: ${pokemonData.weight}
+    Base Experience: ${pokemonData.base_experience}
+    HP: ${pokemonData.stats[0].base_stat}
+    Attack: ${pokemonData.stats[1].base_stat}
+    Defense: ${pokemonData.stats[2].base_stat}
+  `;
 
   const favoriteButton = document.createElement('button');
   favoriteButton.textContent = 'Favorite';
@@ -44,6 +59,10 @@ function addFavoriteButtonToTooltip(cardTop, pokemonData) {
   favoriteButton.addEventListener('click', () => {
     updateFavorites(pokemonData.id);
     cardTop.parentNode.parentNode.removeChild(cardTop.parentNode);
+    
+    const remainingCards = retrieveRemainingCards(pokemonDataArray);
+    console.log(remainingCards);
+    calculateTotalStats(remainingCards);
   });
 
   const tooltip = document.createElement('div');
