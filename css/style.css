@@ -1,52 +1,86 @@
 .navbar {
-  display: flex;
-  flex-flow: row nowrap;
-  padding: 0.5rem 1rem;
-  background: var(--bg-nav);
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 500;
+  transition: ease-in-out 0.3s;
+  background-color: var(--bg-nav);
 }
 
-.navbar .navbar-links { margin-left: auto; }
-.ultra-top-menu { display: flex; }
+.navbar.sticky {
+  background: white;
+  box-shadow: 0px 0px 20px rgba(48, 63, 100, 0.2);
+}
 
-.ultra-top-menu .nav-item a:active,
-.ultra-top-menu .nav-item a:focus { color: var(--cerulean-blue)}
+.navbar.sticky .navbar-toggler span, 
+.navbar.sticky .navbar-brand,
+.navbar.sticky .navbar-nav .nav-link a {
+  color: var(--cerulean-blue);
+}
 
-.ultra-top-menu .nav-item,
-.site-footer p {
-  padding: 18px;
-  font-size: 15px;
-  line-height: 26px;
+.navbar-toggler {
+  position: absolute;
+  right: 20px;
+  top: 5px;
+  outline: none;
+  background-color: transparent;
+  border: 1px solid transparent;
+}
+
+.navbar-toggler span {
+  color: var(--white);
+  font-size: 24px;
   cursor: pointer;
-  text-transform: lowercase;
-  color: var(--clr-text-nav);
+  pointer-events: none;
 }
 
-.brand-logo {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+[aria-controls="navbarDropdown"] {
+  display: none;
 }
 
-.brand-logo a h2 {
-  font-size: 1.5rem;
-  letter-spacing: -0.5px;
-  line-height: 1.42;
+.navbar-nav {
   display: flex;
   align-items: center;
 }
 
-.brand-logo .img-wrapper {
+.navbar .container {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-brand {
+  margin-right: auto;
+  font-size: 2rem;
+  font-weight: 700;
+  width: 100%;
+  transition: ease-in-out 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar-brand .img-wrapper {
   max-width: 32px;
-  margin-right: 0.75rem;
+}
+
+.navbar-brand .img-wrapper img {
   width: 100%;
 }
 
-.brand-logo .img-wrapper img {
-  width: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-  height: 32px;
+.nav-link a {
+  color: var(--golden-yellow);
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  margin-right: 2.5rem;
+  line-height: 1.25rem;
 }
+
+.nav-link a:hover {
+  color: var(--gold-foil);
+}
+
+.site-header { margin-bottom: 50px; }
 
 .site-wrapper {
   flex: 1 0 auto;

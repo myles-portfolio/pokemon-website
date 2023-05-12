@@ -9,7 +9,14 @@ const getPokemon = () => {
 }
 
 const createPokemonCard = pokemonData => {
-  let cardDetails = `Height: ${pokemonData.height}\nWeight: ${pokemonData.weight}\nBase Experience: ${pokemonData.base_experience}\nHP: ${pokemonData.stats[0].base_stat}\nAttack: ${pokemonData.stats[1].base_stat}\nDefense: ${pokemonData.stats[2].base_stat}`;
+  let cardDetails = `
+    Height: ${pokemonData.height}
+    Weight: ${pokemonData.weight}
+    Base Experience: ${pokemonData.base_experience}
+    HP: ${pokemonData.stats[0].base_stat}
+    Attack: ${pokemonData.stats[1].base_stat}
+    Defense: ${pokemonData.stats[2].base_stat}
+  `;
   
   const card = document.createElement('div');
   card.className = 'card';
@@ -116,28 +123,32 @@ if (pagination) {
 
 // *** FILTER BUTTONS
 
-const ascButton = document.getElementById('asc');
-const descButton = document.getElementById('desc');
-const resetButton = document.getElementById('reset');
+const filters = document.querySelector('.filters-container');
 
-ascButton.addEventListener('click', () => {
-  sortCardsByName('asc');
-});
-
-descButton.addEventListener('click', () => {
-  sortCardsByName('desc');
-});
-
-resetButton.addEventListener('click', () => {
-  const cards = Array.from(cardsContainer.children);
-  cards.sort((a, b) => {
-    const aId = parseInt(a.getAttribute('data-id'));
-    const bId = parseInt(b.getAttribute('data-id'));
-    return aId - bId;
+if (filters) {
+  const ascButton = document.getElementById('asc');
+  const descButton = document.getElementById('desc');
+  const resetButton = document.getElementById('reset');
+  
+  ascButton.addEventListener('click', () => {
+    sortCardsByName('asc');
   });
-  cardsContainer.innerHTML = '';
-  cards.forEach(card => cardsContainer.appendChild(card));
-});
+  
+  descButton.addEventListener('click', () => {
+    sortCardsByName('desc');
+  });
+  
+  resetButton.addEventListener('click', () => {
+    const cards = Array.from(cardsContainer.children);
+    cards.sort((a, b) => {
+      const aId = parseInt(a.getAttribute('data-id'));
+      const bId = parseInt(b.getAttribute('data-id'));
+      return aId - bId;
+    });
+    cardsContainer.innerHTML = '';
+    cards.forEach(card => cardsContainer.appendChild(card));
+  });
+}
 
 const sortCardsByName = sortOrder => {
   const cards = Array.from(cardsContainer.children);
@@ -179,3 +190,14 @@ const calculateTotalStats = pokemonDataArray => {
   atkElement.textContent = totalAtk;
   defElement.textContent = totalDef;
 }
+
+// *** Nav Menu
+
+  const navButton = document.querySelector('button[aria-expanded]');
+
+  function toggleNav({ target }) {
+    const expanded = target.getAttribute('aria-expanded') === 'true' || false;
+    navButton.setAttribute('aria-expanded', !expanded);
+  }
+
+  navButton.addEventListener('click', toggleNav);
