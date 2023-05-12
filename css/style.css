@@ -124,6 +124,8 @@
   -webkit-box-shadow: 10px 10px 30px 0px rgba(28,28,28,0.16);
   -moz-box-shadow: 10px 10px 30px 0px rgba(28,28,28,0.16);
   border-radius: 8px;
+  width: 200px;
+  height: 309.078px;
   position: relative;
 }
 

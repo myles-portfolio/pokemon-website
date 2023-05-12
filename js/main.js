@@ -80,21 +80,23 @@ const createPokemonCard = pokemonData => {
   return card;
 }
 
-const addCards = pokemon => {
-  // Create an array of promises for each API call
-  const pokemonPromises = pokemon.map(p => {
-    return fetch(p.url)
-      .then(response => response.json())
-  });
+const addCards = async (pokemon) => {
+  try {
+    // Create an array of promises for each API call
+    const pokemonPromises = pokemon.map(p => {
+      return fetch(p.url)
+        .then(response => response.json())
+    });
 
-  // Wait for all the promises to finish before creating the cards
-  Promise.all(pokemonPromises).then(pokemonDataArr => {
+    // Wait for all the promises to finish before creating the cards
+    const pokemonDataArr = await Promise.all(pokemonPromises);
     pokemonDataArr.forEach(pokemonData => {
       const card = createPokemonCard(pokemonData);
       cardsContainer.appendChild(card);
-    })
-  })
-.catch(error => console.log(error));
+    });
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 const pagination = document.querySelector('.pagination');
