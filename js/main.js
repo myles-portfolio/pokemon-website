@@ -131,22 +131,16 @@ if (filters) {
   const ascButton = document.getElementById('asc');
   const descButton = document.getElementById('desc');
   const resetButton = document.getElementById('reset');
-  
-  ascButton.addEventListener('click', () => {
-    sortCardsByName('asc');
-  });
-  
-  descButton.addEventListener('click', () => {
-    sortCardsByName('desc');
+  const buttonArray = [[ascButton, 'asc'],[descButton, 'desc']];
+  buttonArray.forEach((button) => {
+    button[0].addEventListener('click', () => {
+      sortCardsByName(button[1]);
+    });
   });
   
   resetButton.addEventListener('click', () => {
     const cards = Array.from(cardsContainer.children);
-    cards.sort((a, b) => {
-      const aId = parseInt(a.getAttribute('data-id'));
-      const bId = parseInt(b.getAttribute('data-id'));
-      return aId - bId;
-    });
+    cards.sort(({ dataset: { id: aId } }, { dataset: { id: bId } }) => parseInt(aId) - parseInt(bId));
     cardsContainer.innerHTML = '';
     cards.forEach(card => cardsContainer.appendChild(card));
   });
@@ -154,15 +148,14 @@ if (filters) {
 
 const sortCardsByName = sortOrder => {
   const cards = Array.from(cardsContainer.children);
-  cards.sort((card1, card2) => {
-    const name1 = card1.querySelector('.name').textContent;
-    const name2 = card2.querySelector('.name').textContent;
-    if (sortOrder === 'asc') {
-      return name1.localeCompare(name2);
-    } else {
-      return name2.localeCompare(name1);
-    }
-  });
+  const compareNames = (card1, card2) => {
+    const names = [
+      card1.querySelector('.name').textContent,
+      card2.querySelector('.name').textContent,
+    ];
+    return sortOrder === 'asc' ? names[0].localeCompare(names[1]) : names[1].localeCompare(names[0]);
+  };
+  cards.sort(compareNames);
   cardsContainer.innerHTML = '';
   cards.forEach(card => cardsContainer.appendChild(card));
 }
@@ -179,9 +172,9 @@ const calculateTotalStats = pokemonDataArray => {
   let totalDef = 0;
 
   pokemonDataArray.forEach(pokemonData => {
-    const hp = pokemonData.stats.find(stat => stat.stat.name === 'hp').base_stat;
-    const atk = pokemonData.stats.find(stat => stat.stat.name === 'attack').base_stat;
-    const def = pokemonData.stats.find(stat => stat.stat.name === 'defense').base_stat;
+    const [hp, atk, def] = ['hp', 'attack', 'defense'].map((statVal) => {
+      return pokemonData.stats.find(stat => stat.stat.name === statVal).base_stat;
+    })
 
     totalHp += hp;
     totalAtk += atk;
