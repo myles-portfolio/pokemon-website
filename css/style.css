@@ -269,6 +269,49 @@
   height: 200px;
 }
 
+.collections-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 40px;
+  margin-top: 100px;
+}
+
+.collection-card {
+  width: 300px;
+  height: 200px;
+  background-color: #fff;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--clr-text);
+  box-shadow: 0px 10px 10px rgba(28,28,28,0.16);
+}
+
+.collection-card:hover {
+  background-color: #e4e4e4;
+  color: var(--clr-text);
+}
+
+.create-new {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.create-new .fa-plus {
+  font-size: 32px;
+  color: var(--cerulean-blue);
+  margin-bottom: 10px;
+}
+
+
+
 .site-footer {
   display: flex;
   justify-content: center;

@@ -40,10 +40,10 @@
           </a>
           <ul class="navbar-nav">
             <li class="nav-link">
-              <a href="./index.html">Home</a>
+              <a href="../index.html">Home</a>
             </li>
             <li class="nav-link">
-              <a href="./collections.html">Collections</a>
+              <a href="../collections.html">Collections</a>
             </li>
             <li class="nav-link">
               <a href="./favorites.html">Favorites</a>
@@ -55,28 +55,29 @@
 
     <section class="site-content container">
       <div class="title-container">
-        <h1 class="section-title">Collections</h1>
+        <h1 class="section-title">Collection #1</h1>
       </div>
-      <div class="collections-container">
-        <a class="collection-card create-new">
-          <i class="fa-solid fa-plus"></i>
-          <p>Add New<br>Collection</p>
-        </a>        
-        <a href="./collections/collection-1.html" class="collection-card">
-          Collection #1
-        </a>
-        <a href="./collections/collection-1.html" class="collection-card">
-          Collection #2
-        </a>
-        <a href="./collections/collection-1.html" class="collection-card">
-          Collection #3
-        </a>
-        <a href="./collections/collection-1.html" class="collection-card">
-          Collection #4
-        </a>
-        <a href="./collections/collection-1.html" class="collection-card">
-          Collection #5
-        </a>
+      <div class="filters-container">
+        <button id="asc">Sort A - Z</button>
+        <button id="desc">Sort Z - A</button>
+        <button id="reset">Sort by ID</button>
+      </div>
+      <div class="total-stats">
+        <h3>Total Stats:</h3>
+        <div class="stat">
+          <p>HP:</p>
+          <p id="hp"></p>
+        </div>
+        <div class="stat">
+          <p>ATK:</p>
+          <p id="atk"></p>
+        </div>
+        <div class="stat">
+          <p>DEF:</p>
+          <p id="def"></p>
+        </div>
+      </div>
+      <div class="grid-container">
       </div>
     </section>
   </main>
